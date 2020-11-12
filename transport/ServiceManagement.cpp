@@ -792,15 +792,6 @@ sp<::android::hidl::base::V1_0::IBase> getRawServiceInternal(const std::string& 
     const bool allowLegacy = !kEnforceVintfManifest || (trebleTestingOverride && kDebuggable);
     const bool vintfLegacy = (transport == Transport::EMPTY) && allowLegacy;
 
-    if (!kEnforceVintfManifest) {
-        ALOGE("getService: Potential race detected. The VINTF manifest is not being enforced. If "
-              "a HAL server has a delay in starting and it is not in the manifest, it will not be "
-              "retrieved. Please make sure all HALs on this device are in the VINTF manifest and "
-              "enable PRODUCT_ENFORCE_VINTF_MANIFEST on this device (this is also enabled by "
-              "PRODUCT_FULL_TREBLE). PRODUCT_ENFORCE_VINTF_MANIFEST will ensure that no race "
-              "condition is possible here.");
-    }
-
     for (int tries = 0; !getStub && (vintfHwbinder || vintfLegacy); tries++) {
         if (waiter == nullptr && tries > 0) {
             waiter = new Waiter(descriptor, instance, sm);
